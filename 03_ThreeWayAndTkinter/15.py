@@ -72,8 +72,8 @@ class Application(tk.Frame):
                 if (self.gameButtons[i][j]):
                     self.gameButtons[i][j].grid(row=i, column=j, sticky="nsew")
         self.availableMoves = [(3,2),(2,3)]
-        self.holePos = (3,3)
         self.shuffle()
+        self.updatePositions()
         
     def checkWin(self):
         for i in range(4):
@@ -93,9 +93,14 @@ class Application(tk.Frame):
         if (self.doMove(m,n)):
             if (self.checkWin()):
                 self.win()
+        #print(self.gameMap)
          
     def shuffle(self):
-        pass #TODO
+        for _ in range(1000):
+            rnd = random.choice(self.availableMoves)
+            self.doMove(rnd[0],rnd[1])
+        if (self.checkWin()):
+            self.shuffle()
          
     def doMove(self, i, j):
         if (i,j) not in self.availableMoves:
@@ -103,11 +108,11 @@ class Application(tk.Frame):
         else:
             for key in self.gameMap:
                 if (self.gameMap[key]==(i,j)):
-                    self.gameMap[key]=self.holePos
-            self.holePos = (i,j)
+                    self.gameMap[key]=self.gameMap[(3,3)]
+            self.gameMap[(3,3)] = (i,j)
             self.availableMoves = []
-            m = self.holePos[0]
-            n = self.holePos[1]
+            m = self.gameMap[(3,3)][0]
+            n = self.gameMap[(3,3)][1]
             if (m-1)>=0:
                 self.availableMoves.append((m-1,n))
             if (m+1)<=3:
