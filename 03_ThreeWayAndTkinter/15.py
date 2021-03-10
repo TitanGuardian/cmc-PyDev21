@@ -4,7 +4,6 @@ import tkinter as tk
 import tkinter.messagebox as mb
 
 import random
-from datetime import datetime
 
 
 class Application(tk.Frame):
@@ -12,7 +11,7 @@ class Application(tk.Frame):
         super().__init__(master)
         
         #set random seed
-        random.seed(datetime.now())
+        random.seed(458965)
         
         #game frame will fill all free space
         self.master.grid_rowconfigure(1, weight=1)
@@ -58,7 +57,7 @@ class Application(tk.Frame):
                         s = ' '+str(el)
                     else:
                         s = str(el)
-                    self.gameButtons[i].append(tk.Button(self.gameFrame, text=s, command=createLambda(i,j)))
+                    self.gameButtons[i].append(tk.Button(self.gameFrame, text=s, command=createLambda(i,j), height = 3, width = 5))
                     
         self.gameMap = {}
         self.newGame()
