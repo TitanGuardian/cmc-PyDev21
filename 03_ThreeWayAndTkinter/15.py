@@ -30,24 +30,31 @@ class Application(tk.Frame):
         self.quitButton.grid(row=0, column=1)
 
     def createGameWidgets(self):
-    
         for i in range(4):
             self.gameFrame.grid_rowconfigure(i, weight=2)
             self.gameFrame.grid_columnconfigure(i, weight=2)
         
         self.gameButtons = []
+        
+        def create_lambda(fi,fj):
+            return lambda: self.game_button_press(fi,fj)
+        
         for i in range(4):
             self.gameButtons.append([])
             for j in range(4):
                 if (i==3 and j==3):
                     self.gameButtons[i].append(None)
                 else:    
-                    self.gameButtons[i].append(tk.Button(self.gameFrame, text=str(i*4+j+1)))
-                
+                    self.gameButtons[i].append(tk.Button(self.gameFrame, text=str(i*4+j+1), command=create_lambda(i,j)))    
         for i in range(4):
             for j in range(4):
                 if (self.gameButtons[i][j]):
                     self.gameButtons[i][j].grid(row=i, column=j, sticky="nsew")
+        
+        self.gameMap = {}
+        for i in range(4):
+            for j in range(4):
+            self.gameMap[(i,j)]=(i,j)
                 
     def new_game(self):
         print(self.gameButtons)
@@ -55,6 +62,8 @@ class Application(tk.Frame):
     def win(self):
         pass #TODO
         
+    def game_button_press(self, i, j):
+        print(i,j)
 
 app = Application()
 app.master.title('Sample application')
