@@ -30,24 +30,27 @@ class Application(tk.Frame):
         self.quitButton.grid(row=0, column=1)
 
     def createGameWidgets(self):
-        self.gameFrame.grid_rowconfigure(0, weight=2)
-        self.gameFrame.grid_rowconfigure(1, weight=2)
-        self.gameFrame.grid_columnconfigure(0, weight=2)
-        self.gameFrame.grid_columnconfigure(1, weight=2)
+    
+        for i in range(4):
+            self.gameFrame.grid_rowconfigure(i, weight=2)
+            self.gameFrame.grid_columnconfigure(i, weight=2)
         
-        self.gameButton0 = tk.Button(self.gameFrame, text='GAME0')
-        self.gameButton1 = tk.Button(self.gameFrame, text='GAME1')
-        self.gameButton2 = tk.Button(self.gameFrame, text='GAME2')
-        self.gameButton3 = tk.Button(self.gameFrame, text='GAME3')
-        
-        self.gameButton0.grid(row=0, column=0, sticky="nsew")
-        self.gameButton1.grid(row=0, column=1, sticky="nsew")
-        self.gameButton2.grid(row=1, column=0, sticky="nsew")
-        self.gameButton3.grid(row=1, column=1, sticky="nsew")
-        
-
+        self.gameButtons = []
+        for i in range(4):
+            self.gameButtons.append([])
+            for j in range(4):
+                if (i==3 and j==3):
+                    self.gameButtons[i].append(None)
+                else:    
+                    self.gameButtons[i].append(tk.Button(self.gameFrame, text=str(i*4+j+1)))
+                
+        for i in range(4):
+            for j in range(4):
+                if (self.gameButtons[i][j]):
+                    self.gameButtons[i][j].grid(row=i, column=j, sticky="nsew")
+                
     def new_game(self):
-        pass #TODO
+        print(self.gameButtons)
         
     def win(self):
         pass #TODO
