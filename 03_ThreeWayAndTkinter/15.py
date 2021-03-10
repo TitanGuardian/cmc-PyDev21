@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 
 import tkinter as tk
+import tkinter.messagebox as mb
+
+import random
+from datetime import datetime
+
 
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
+        
+        #set random seed
+        random.seed(datetime.now())
         
         #game frame will fill all free space
         self.master.grid_rowconfigure(1, weight=1)
@@ -24,7 +32,7 @@ class Application(tk.Frame):
         self.menuFrame.grid_columnconfigure(0, weight=1)
         self.menuFrame.grid_columnconfigure(1, weight=1)
         self.quitButton = tk.Button(self.menuFrame, text='Quit', command=self.quit)
-        self.newButton = tk.Button(self.menuFrame, text='New',  command=self.new_game)
+        self.newButton = tk.Button(self.menuFrame, text='New',  command=self.newGame)
         
         self.newButton.grid(row=0, column=0)
         self.quitButton.grid(row=0, column=1)
@@ -36,8 +44,8 @@ class Application(tk.Frame):
         
         self.gameButtons = []
         
-        def create_lambda(fi,fj):
-            return lambda: self.game_button_press(fi,fj)
+        def createLambda(fi,fj):
+            return lambda: self.gameButtonPress(fi,fj)
         
         for i in range(4):
             self.gameButtons.append([])
@@ -45,26 +53,47 @@ class Application(tk.Frame):
                 if (i==3 and j==3):
                     self.gameButtons[i].append(None)
                 else:    
-                    self.gameButtons[i].append(tk.Button(self.gameFrame, text=str(i*4+j+1), command=create_lambda(i,j)))    
+                    self.gameButtons[i].append(tk.Button(self.gameFrame, text=str(i*4+j+1), command=createLambda(i,j)))
+                    
+        self.gameMap = {}
+        self.newGame()
+                
+    def newGame(self):
+        for i in range(4):
+            for j in range(4):
+                self.gameMap[(i,j)]=(i,j)
         for i in range(4):
             for j in range(4):
                 if (self.gameButtons[i][j]):
                     self.gameButtons[i][j].grid(row=i, column=j, sticky="nsew")
+        self.availableMoves = [(3,2),(2,3)]
+        self.shuffle()
         
-        self.gameMap = {}
+    def checkWin(self):
         for i in range(4):
             for j in range(4):
-            self.gameMap[(i,j)]=(i,j)
-                
-    def new_game(self):
-        print(self.gameButtons)
+                if (self.gameMap[(i,j)]!=(i,j)):
+                    return False
+        return True
         
     def win(self):
-        pass #TODO
+        mb.showinfo("You won!","Game will restart.")
+        self.newGame()
         
-    def game_button_press(self, i, j):
-        print(i,j)
+    def gameButtonPress(self, i, j):
+        if (self.doMove(i,j)):
+            if (self.checkWin()):
+                self.win()
+         
+    def shuffle(self):
+        pass #TODO
+         
+    def doMove(self, i, j):
+        if (i,j) not in self.availableMoves:
+            return False
+        else:
+            return True #TODO
 
 app = Application()
-app.master.title('Sample application')
+app.master.title('Game15')
 app.mainloop()
