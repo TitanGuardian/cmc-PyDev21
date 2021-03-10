@@ -52,8 +52,13 @@ class Application(tk.Frame):
             for j in range(4):
                 if (i==3 and j==3):
                     self.gameButtons[i].append(None)
-                else:    
-                    self.gameButtons[i].append(tk.Button(self.gameFrame, text=str(i*4+j+1), command=createLambda(i,j)))
+                else:
+                    el = i*4+j+1
+                    if (el)<=9:
+                        s = ' '+str(el)
+                    else:
+                        s = str(el)
+                    self.gameButtons[i].append(tk.Button(self.gameFrame, text=s, command=createLambda(i,j)))
                     
         self.gameMap = {}
         self.newGame()
@@ -82,7 +87,10 @@ class Application(tk.Frame):
         self.newGame()
         
     def gameButtonPress(self, i, j):
-        if (self.doMove(i,j)):
+        mn = self.gameMap[(i,j)]
+        m = mn[0]
+        n = mn[1]
+        if (self.doMove(m,n)):
             if (self.checkWin()):
                 self.win()
          
@@ -90,12 +98,13 @@ class Application(tk.Frame):
         pass #TODO
          
     def doMove(self, i, j):
-        if self.gameMap[(i,j)] not in self.availableMoves:
+        if (i,j) not in self.availableMoves:
             return False
         else:
-            tmp = self.gameMap[(i,j)]
-            self.gameMap[(i,j)] = self.holePos
-            self.holePos = tmp
+            for key in self.gameMap:
+                if (self.gameMap[key]==(i,j)):
+                    self.gameMap[key]=self.holePos
+            self.holePos = (i,j)
             self.availableMoves = []
             m = self.holePos[0]
             n = self.holePos[1]
